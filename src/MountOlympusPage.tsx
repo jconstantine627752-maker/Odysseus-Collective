@@ -1,6 +1,24 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import MermaidBlock from "./components/MermaidBlock";
 
+/* ---------- Small helper that renders Mermaid when the block is visible ---------- */
+function MermaidAuto({ code }: { code: string }) {
+  const [active, setActive] = React.useState(false);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.4 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      onViewportEnter={() => setActive(true)}
+    >
+      <MermaidBlock code={code} active={active} />
+    </motion.div>
+  );
+}
+
+/* ---------------------------------- Stars ---------------------------------- */
 function Stars() {
   return (
     <div className="absolute inset-0 pointer-events-none" aria-hidden>
@@ -22,6 +40,7 @@ function Stars() {
   );
 }
 
+/* ------------------------------- Mountains ------------------------------- */
 function Mountains() {
   return (
     <div className="absolute bottom-0 w-full h-[45vh] bg-gradient-to-t from-gray-900 to-transparent overflow-hidden">
@@ -44,11 +63,11 @@ function Mountains() {
   );
 }
 
+/* --------------------------------- Clouds --------------------------------- */
 function Clouds() {
   return (
     <div className="absolute bottom-0 w-full h-[35vh] overflow-hidden">
       <div className="absolute bottom-0 w-full h-[20vh] bg-white/30 blur-3xl" />
-
       {Array.from({ length: 12 }).map((_, i) => (
         <motion.div
           key={i}
@@ -71,6 +90,7 @@ function Clouds() {
   );
 }
 
+/* ------------------------------- Intro Scene ------------------------------ */
 function OlympusIntro({ onEnter }: { onEnter: () => void }) {
   return (
     <main className="relative min-h-screen overflow-hidden text-white bg-black">
@@ -117,7 +137,7 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
         />
       </div>
 
-      {/* Subtle glowing aura around entire tower */}
+      {/* Clickable glow mask over the tower */}
       <motion.svg
         className="absolute bottom-0 left-1/2 -translate-x-1/2"
         style={{ width: 220, height: 780 }}
@@ -141,7 +161,6 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
               fill="white"
             />
           </mask>
-
           <filter id="softGoldGlow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur in="SourceAlpha" stdDeviation="30" result="blur" />
             <feFlood floodColor="#EEDC82" floodOpacity="0.6" result="color" />
@@ -178,10 +197,46 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
   );
 }
 
+/* ------------------------------- Main Scene ------------------------------- */
 function MainScene() {
+  const H = ({ children }: { children: React.ReactNode }) => (
+    <h2 className="text-xl md:text-2xl font-semibold tracking-wide mb-4 text-[#E5C970]">
+      {children}
+    </h2>
+  );
+
+  // Mermaid graph sources (top → down)
+  const gOverview = `
+flowchart TD
+  O[Odysseus Platform] --> A[Agents: Chat API & UI]
+  O --> S[Solana Bot: Pump.fun + RugCheck + Jupiter]
+  O --> B[BNB Module: HTTP swap service]
+  O --> D[Unified Docker Workflow]
+`;
+  const gAgents = `
+flowchart TD
+  A[Agents] --> API[OpenAI-compatible API]
+  A --> Backends[Pluggable backends (OpenAI / local / hosted)]
+  A --> Calls[Calls internal trade services]
+  A --> UI[Optional UI]
+`;
+  const gSolana = `
+flowchart TD
+  S[Solana Bot] --> Watch[Watch Pump.fun tokens]
+  Watch --> Risk[RugCheck risk gate]
+  Risk -->|pass| Route[Jupiter routing]
+  Route --> Exec[Execute trade]
+`;
+  const gBNB = `
+flowchart TD
+  B[BNB Module] --> HTTP[HTTP endpoint]
+  HTTP --> Swap[Live swap on BNB Chain]
+  Swap --> Confirm[Confirm and return]
+`;
+
   return (
     <main className="relative min-h-screen overflow-x-hidden text-white bg-gradient-to-b from-[#0b1020] via-[#090f1c] to-[#05070d]">
-      {/* HERO: welcome message */}
+      {/* HERO */}
       <Stars />
       <section className="relative z-10 flex items-center justify-center h-screen px-6 text-center">
         <div className="max-w-3xl">
@@ -195,15 +250,58 @@ function MainScene() {
         </div>
       </section>
 
-      {/* SCROLL-TO SKY: empty night sky canvas */}
-      <section id="sky" className="relative z-0 min-h-[140vh]">
+      {/* SCROLLING MERMAID SECTIONS */}
+      <section className="relative z-0 pb-32">
         <Stars />
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-transparent to-black/20" />
+
+        <div className="space-y-24 px-6">
+          {/* Overview */}
+          <div className="max-w-5xl mx-auto">
+            <H>Unified AI & On-Chain Trading Platform</H>
+            <p className="text-white/80 mb-6">
+              Modular system combining conversational agents with rule-based
+              trading. Built for transparency, safety, and local control.
+              Deployable with Docker.
+            </p>
+            <MermaidAuto code={gOverview} />
+          </div>
+
+          {/* Agents */}
+          <div className="max-w-5xl mx-auto">
+            <H>Agents</H>
+            <p className="text-white/80 mb-6">
+              Lightweight chat layer with an OpenAI-compatible API for
+              reasoning, orchestration, and custom commands.
+            </p>
+            <MermaidAuto code={gAgents} />
+          </div>
+
+          {/* Solana Bot */}
+          <div className="max-w-5xl mx-auto">
+            <H>Solana Bot</H>
+            <p className="text-white/80 mb-6">
+              Automated trading for Pump.fun tokens with RugCheck gating and
+              Jupiter routing.
+            </p>
+            <MermaidAuto code={gSolana} />
+          </div>
+
+          {/* BNB Module */}
+          <div className="max-w-5xl mx-auto">
+            <H>BNB Module</H>
+            <p className="text-white/80 mb-6">
+              HTTP microservice that executes live swaps on BNB Chain.
+            </p>
+            <MermaidAuto code={gBNB} />
+          </div>
+        </div>
       </section>
     </main>
   );
 }
 
+/* ------------------------------- Export Page ------------------------------ */
 export default function MountOlympusPage() {
   const [entered, setEntered] = useState(false);
 
