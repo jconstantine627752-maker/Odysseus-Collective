@@ -1,4 +1,3 @@
-``tsx
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -33,10 +32,11 @@ function Mountains() {
           style={{
             bottom: 0,
             left: `${i * 15 - 10}%`,
-            width: '50%',
+            width: "50%",
             height: `${30 + Math.random() * 40}vh`,
-            clipPath: 'polygon(0% 100%, 20% 40%, 50% 20%, 80% 50%, 100% 100%)',
-            filter: 'blur(3px)',
+            clipPath:
+              "polygon(0% 100%, 20% 40%, 50% 20%, 80% 50%, 100% 100%)",
+            filter: "blur(3px)",
           }}
         />
       ))}
@@ -60,7 +60,11 @@ function Clouds() {
             height: `${60 + Math.random() * 100}px`,
           }}
           animate={{ x: [0, 25, 0], opacity: [0.5, 0.8, 0.5] }}
-          transition={{ repeat: Infinity, duration: 15 + Math.random() * 10, ease: "easeInOut" }}
+          transition={{
+            repeat: Infinity,
+            duration: 15 + Math.random() * 10,
+            ease: "easeInOut",
+          }}
         />
       ))}
     </div>
@@ -88,7 +92,11 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
 
         <div className="flex space-x-3">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="bg-gray-300 shadow-md" style={{ width: 12, height: 100 }} />
+            <div
+              key={i}
+              className="bg-gray-300 shadow-md"
+              style={{ width: 12, height: 100 }}
+            />
           ))}
         </div>
 
@@ -124,7 +132,14 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
             <rect x="0" y="0" width="220" height="780" fill="black" />
             <rect x="0" y="0" width="220" height="50" rx="25" fill="white" />
             <rect x="30" y="60" width="160" height="500" fill="white" />
-            <rect x="10" y="560" width="200" height="220" rx="100" fill="white" />
+            <rect
+              x="10"
+              y="560"
+              width="200"
+              height="220"
+              rx="100"
+              fill="white"
+            />
           </mask>
 
           <filter id="softGoldGlow" x="-50%" y="-50%" width="200%" height="200%">
@@ -138,10 +153,25 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
           </filter>
         </defs>
 
-        <rect x="0" y="0" width="220" height="780" mask="url(#towerUnion)" fill="transparent" pointerEvents="all" />
+        <rect
+          x="0"
+          y="0"
+          width="220"
+          height="780"
+          mask="url(#towerUnion)"
+          fill="transparent"
+          pointerEvents="all"
+        />
 
         <g mask="url(#towerUnion)" filter="url(#softGoldGlow)">
-          <rect x="0" y="0" width="220" height="780" fill="#EEDC82" opacity="0.25" />
+          <rect
+            x="0"
+            y="0"
+            width="220"
+            height="780"
+            fill="#EEDC82"
+            opacity="0.25"
+          />
         </g>
       </motion.svg>
     </main>
@@ -155,9 +185,12 @@ function MainScene() {
       <Stars />
       <section className="relative z-10 flex items-center justify-center h-screen px-6 text-center">
         <div className="max-w-3xl">
-          <h1 className="text-3xl sm:text-4xl font-semibold mb-6">Odysseus Collective</h1>
+          <h1 className="text-3xl sm:text-4xl font-semibold mb-6">
+            Odysseus Collective
+          </h1>
           <p className="text-white/90 leading-relaxed">
-            Welcome to the Odysseus Collective. What hatred drives you to climb the mountain here?
+            Welcome to the Odysseus Collective. What hatred drives you to climb
+            the mountain here?
           </p>
         </div>
       </section>
@@ -200,4 +233,3 @@ export default function MountOlympusPage() {
     </AnimatePresence>
   );
 }
-```
