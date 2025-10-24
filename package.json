@@ -1,4 +1,3 @@
-```json
 {
   "name": "odysseus-collective",
   "private": true,
@@ -6,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "preview": "vite preview --port 5173"
   },
   "dependencies": {
@@ -28,4 +27,3 @@
     "node": ">=18"
   }
 }
-```
