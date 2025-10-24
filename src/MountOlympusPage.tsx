@@ -2,15 +2,23 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import MermaidBlock from "./components/MermaidBlock";
 
-/* ---------- Small helper that renders Mermaid when the block is visible ---------- */
+/* -------------------------------------------------------------------------- */
+/* Helpers                                                                    */
+/* -------------------------------------------------------------------------- */
+
+/** Render a Mermaid block only after it enters the viewport (prevents DOM timing issues). */
 function MermaidAuto({ code }: { code: string }) {
   const [active, setActive] = React.useState(false);
+
+  // “regal” fade: slower, with a luxurious easing curve (easeOutQuint-like)
+  const regal = { duration: 1.1, ease: [0.16, 1, 0.3, 1] as const };
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.4 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      transition={regal}
       onViewportEnter={() => setActive(true)}
     >
       <MermaidBlock code={code} active={active} />
@@ -18,7 +26,10 @@ function MermaidAuto({ code }: { code: string }) {
   );
 }
 
-/* ---------------------------------- Stars ---------------------------------- */
+/* -------------------------------------------------------------------------- */
+/* Background layers                                                          */
+/* -------------------------------------------------------------------------- */
+
 function Stars() {
   return (
     <div className="absolute inset-0 pointer-events-none" aria-hidden>
@@ -40,7 +51,6 @@ function Stars() {
   );
 }
 
-/* ------------------------------- Mountains ------------------------------- */
 function Mountains() {
   return (
     <div className="absolute bottom-0 w-full h-[45vh] bg-gradient-to-t from-gray-900 to-transparent overflow-hidden">
@@ -63,7 +73,6 @@ function Mountains() {
   );
 }
 
-/* --------------------------------- Clouds --------------------------------- */
 function Clouds() {
   return (
     <div className="absolute bottom-0 w-full h-[35vh] overflow-hidden">
@@ -81,7 +90,7 @@ function Clouds() {
           animate={{ x: [0, 25, 0], opacity: [0.5, 0.8, 0.5] }}
           transition={{
             repeat: Infinity,
-            duration: 15 + Math.random() * 10,
+            duration: 18 + Math.random() * 12, // slightly slower drift
             ease: "easeInOut",
           }}
         />
@@ -90,7 +99,10 @@ function Clouds() {
   );
 }
 
-/* ------------------------------- Intro Scene ------------------------------ */
+/* -------------------------------------------------------------------------- */
+/* Intro scene                                                                */
+/* -------------------------------------------------------------------------- */
+
 function OlympusIntro({ onEnter }: { onEnter: () => void }) {
   return (
     <main className="relative min-h-screen overflow-hidden text-white bg-black">
@@ -107,7 +119,7 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
           style={{ width: 220, height: 50, marginBottom: 10 }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
+          transition={{ delay: 0.3, duration: 0.9 }}
         />
 
         <div className="flex space-x-3">
@@ -123,17 +135,17 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
         <motion.div
           className="bg-gray-700 border-x-4 border-gray-500 shadow-lg"
           style={{ width: "160px", height: "400px" }}
-          initial={{ y: 200, opacity: 0 }}
+          initial={{ y: 220, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1.2, ease: "easeOut", delay: 0.1 }}
+          transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
         />
 
         <motion.div
           className="bg-gray-600 border-t-4 border-gray-400 rounded-t-lg shadow-xl"
           style={{ width: "200px", height: "220px" }}
-          initial={{ y: 200, opacity: 0 }}
+          initial={{ y: 220, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1.0, ease: "easeOut" }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         />
       </div>
 
@@ -142,9 +154,9 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
         className="absolute bottom-0 left-1/2 -translate-x-1/2"
         style={{ width: 220, height: 780 }}
         viewBox="0 0 220 780"
-        initial={{ opacity: 0 }}
+        initial={{ opacity: 0.2 }}
         whileHover={{ opacity: 0.5 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: 0.5 }}
         onClick={onEnter}
       >
         <defs>
@@ -197,49 +209,143 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
   );
 }
 
-/* ------------------------------- Main Scene ------------------------------- */
+/* -------------------------------------------------------------------------- */
+/* Main scene with marble Mermaid gallery + extended tail                     */
+/* -------------------------------------------------------------------------- */
+
 function MainScene() {
   const H = ({ children }: { children: React.ReactNode }) => (
-    <h2 className="text-xl md:text-2xl font-semibold tracking-wide mb-4 text-[#E5C970]">
+    <h2 className="text-xl md:text-2xl font-semibold tracking-wide mb-3 text-[#E5C970]">
       {children}
     </h2>
   );
 
-  // Mermaid graph sources (top → down)
-  const gOverview = `
+  // 10 diagrams, top → bottom
+  const diagrams: { title: string; blurb: string; code: string }[] = [
+    {
+      title: "Unified AI & On-Chain Trading Platform",
+      blurb:
+        "Modular system combining conversational agents with rule-based trading. Built for transparency, safety, and local control. Deployable with Docker.",
+      code: `
 flowchart TD
   O[Odysseus Platform] --> A[Agents: Chat API & UI]
   O --> S[Solana Bot: Pump.fun + RugCheck + Jupiter]
   O --> B[BNB Module: HTTP swap service]
-  O --> D[Unified Docker Workflow]
-`;
-  const gAgents = `
+  O --> D[Unified Docker Workflow]`
+    },
+    {
+      title: "Agents",
+      blurb:
+        "Lightweight chat layer with an OpenAI-compatible API for reasoning, orchestration, and custom commands.",
+      code: `
 flowchart TD
   A[Agents] --> API[OpenAI-compatible API]
   A --> Backends[Pluggable backends (OpenAI / local / hosted)]
   A --> Calls[Calls internal trade services]
-  A --> UI[Optional UI]
-`;
-  const gSolana = `
+  A --> UI[Optional UI]`
+    },
+    {
+      title: "Solana Bot",
+      blurb:
+        "Automated trading for Pump.fun tokens with RugCheck gating and Jupiter routing.",
+      code: `
 flowchart TD
   S[Solana Bot] --> Watch[Watch Pump.fun tokens]
   Watch --> Risk[RugCheck risk gate]
   Risk -->|pass| Route[Jupiter routing]
-  Route --> Exec[Execute trade]
-`;
-  const gBNB = `
+  Route --> Exec[Execute trade]`
+    },
+    {
+      title: "BNB Module",
+      blurb: "HTTP microservice that executes live swaps on BNB Chain.",
+      code: `
 flowchart TD
   B[BNB Module] --> HTTP[HTTP endpoint]
   HTTP --> Swap[Live swap on BNB Chain]
-  Swap --> Confirm[Confirm and return]
-`;
+  Swap --> Confirm[Confirm and return]`
+    },
+    {
+      title: "Risk Controls",
+      blurb: "Pre-trade checks and circuit breakers across services.",
+      code: `
+flowchart TD
+  R[Risk Controls] --> Limits[Per-asset limits]
+  R --> Slippage[Slippage guard]
+  R --> Halt[Global halt triggers]
+  Limits --> OK{Pass?}
+  Slippage --> OK
+  Halt -->|No| Block[Block trade]`
+    },
+    {
+      title: "Execution Flow",
+      blurb: "Unified execution pipeline from intent to settlement.",
+      code: `
+flowchart TD
+  I[Intent] --> Pre[Pre-checks]
+  Pre --> Quote[Router quote]
+  Quote --> Sign[Sign+Send]
+  Sign --> Settle[Settlement]
+  Settle --> Report[Metrics + logs]`
+    },
+    {
+      title: "Data Feeds",
+      blurb: "Routing and risk rely on external and internal data.",
+      code: `
+flowchart TD
+  Feeds[Data Feeds] --> Prices[DEX prices]
+  Feeds --> Mkt[Market depth]
+  Feeds --> RiskDB[Risk DB]
+  Prices --> Router
+  Mkt --> Router
+  RiskDB --> Risk`
+    },
+    {
+      title: "Wallets & Keys",
+      blurb: "Key management across networks with scoped permissions.",
+      code: `
+flowchart TD
+  K[Key Mgmt] --> Cold[Cold storage]
+  K --> Hot[Signer service]
+  Hot --> Policy[Per-action policy]
+  Policy --> Networks[Solana / BNB]`
+    },
+    {
+      title: "Observability",
+      blurb: "Logs, metrics, and alerts across all modules.",
+      code: `
+flowchart TD
+  Obs[Observability] --> Logs[Structured logs]
+  Obs --> Metrics[Metrics]
+  Obs --> Alerts[Alerts]
+  Logs --> SIEM
+  Metrics --> Dashboards
+  Alerts --> Oncall`
+    },
+    {
+      title: "Deploy",
+      blurb: "Local and cloud via Docker; static hosting for the UI.",
+      code: `
+flowchart TD
+  Deploy[Docker Compose] --> Local[Local dev]
+  Deploy --> Cloud[Render / Fly.io]
+  UI[Static UI] --> CDN[CDN hosting]`
+    }
+  ];
+
+  // regal fade used for headings/paragraphs too
+  const regal = { duration: 1.05, ease: [0.16, 1, 0.3, 1] as const };
 
   return (
     <main className="relative min-h-screen overflow-x-hidden text-white bg-gradient-to-b from-[#0b1020] via-[#090f1c] to-[#05070d]">
       {/* HERO */}
       <Stars />
       <section className="relative z-10 flex items-center justify-center h-screen px-6 text-center">
-        <div className="max-w-3xl">
+        <motion.div
+          className="max-w-3xl"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+        >
           <h1 className="text-3xl sm:text-4xl font-semibold mb-6">
             Odysseus Collective
           </h1>
@@ -247,61 +353,47 @@ flowchart TD
             Welcome to the Odysseus Collective. What hatred drives you to climb
             the mountain here?
           </p>
-        </div>
+        </motion.div>
       </section>
 
-      {/* SCROLLING MERMAID SECTIONS */}
+      {/* MARBLE MERMAID GALLERY */}
       <section className="relative z-0 pb-32">
         <Stars />
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-transparent to-black/20" />
 
-        <div className="space-y-24 px-6">
-          {/* Overview */}
-          <div className="max-w-5xl mx-auto">
-            <H>Unified AI & On-Chain Trading Platform</H>
-            <p className="text-white/80 mb-6">
-              Modular system combining conversational agents with rule-based
-              trading. Built for transparency, safety, and local control.
-              Deployable with Docker.
-            </p>
-            <MermaidAuto code={gOverview} />
-          </div>
+        <div className="space-y-36 px-6">
+          {diagrams.map(({ title, blurb, code }, idx) => (
+            <div key={idx} className="max-w-6xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 26 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={regal}
+                className="mb-5"
+              >
+                <H>{title}</H>
+                <p className="text-white/80">{blurb}</p>
+              </motion.div>
 
-          {/* Agents */}
-          <div className="max-w-5xl mx-auto">
-            <H>Agents</H>
-            <p className="text-white/80 mb-6">
-              Lightweight chat layer with an OpenAI-compatible API for
-              reasoning, orchestration, and custom commands.
-            </p>
-            <MermaidAuto code={gAgents} />
-          </div>
-
-          {/* Solana Bot */}
-          <div className="max-w-5xl mx-auto">
-            <H>Solana Bot</H>
-            <p className="text-white/80 mb-6">
-              Automated trading for Pump.fun tokens with RugCheck gating and
-              Jupiter routing.
-            </p>
-            <MermaidAuto code={gSolana} />
-          </div>
-
-          {/* BNB Module */}
-          <div className="max-w-5xl mx-auto">
-            <H>BNB Module</H>
-            <p className="text-white/80 mb-6">
-              HTTP microservice that executes live swaps on BNB Chain.
-            </p>
-            <MermaidAuto code={gBNB} />
-          </div>
+              <MermaidAuto code={code} />
+            </div>
+          ))}
         </div>
+      </section>
+
+      {/* LONG STAR FIELD TAIL — extend scroll length (tune vh if you want more) */}
+      <section className="relative min-h-[300vh]">
+        <Stars />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
       </section>
     </main>
   );
 }
 
-/* ------------------------------- Export Page ------------------------------ */
+/* -------------------------------------------------------------------------- */
+/* Export page with intro→main transition                                     */
+/* -------------------------------------------------------------------------- */
+
 export default function MountOlympusPage() {
   const [entered, setEntered] = useState(false);
 
@@ -313,7 +405,7 @@ export default function MountOlympusPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           <OlympusIntro onEnter={() => setEntered(true)} />
         </motion.div>
@@ -323,7 +415,7 @@ export default function MountOlympusPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.4 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           <MainScene />
         </motion.div>
