@@ -1,12 +1,16 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useRef } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import MermaidBlock from "./components/MermaidBlock";
 
 /* ============================================================================
    Helpers
    ========================================================================== */
 
-/** Reveal container + trigger Mermaid render once it comes into view. */
 function MermaidAuto({ code }: { code: string }) {
   const [active, setActive] = React.useState(false);
   return (
@@ -207,7 +211,116 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
 }
 
 /* ============================================================================
-   Main scene: marble Mermaid gallery + long tail
+   Roof reveal (sticky) + Interior pillars (sticky)
+   ========================================================================== */
+
+function RoofReveal() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"], // start effect as soon as section enters
+  });
+
+  // Roof rises and softly fades
+  const y = useTransform(scrollYProgress, [0, 1], ["20%", "-10%"]);
+  const opacity = useTransform(scrollYProgress, [0, 0.15, 1], [0, 1, 0.95]);
+
+  return (
+    <section ref={ref} className="relative min-h-[160vh]">
+      <Stars />
+      <div className="sticky top-0 h-screen flex items-end justify-center overflow-hidden">
+        <motion.div style={{ y, opacity }} className="w-full max-w-5xl px-6">
+          <svg viewBox="0 0 1200 380" className="w-full h-auto" aria-label="Temple roof">
+            <defs>
+              <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#e5e7eb" />
+                <stop offset="100%" stopColor="#c7cbd1" />
+              </linearGradient>
+              <linearGradient id="ledge" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#e5e7eb" />
+                <stop offset="100%" stopColor="#d1d5db" />
+              </linearGradient>
+            </defs>
+            {/* Pediment */}
+            <polygon points="0,300 600,40 1200,300" fill="url(#stone)" />
+            {/* Ledge */}
+            <rect x="60" y="300" width="1080" height="26" fill="url(#ledge)" />
+            {/* Subtle shadow */}
+            <rect x="60" y="326" width="1080" height="18" fill="rgba(0,0,0,0.12)" />
+          </svg>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function TempleInterior() {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end end"],
+  });
+
+  // Interior fades in as we enter
+  const opacity = useTransform(scrollYProgress, [0, 0.06], [0, 1]);
+
+  return (
+    <section ref={ref} className="relative min-h-[220vh]">
+      {/* Star field behind the pillars (visible in gaps) */}
+      <Stars />
+
+      <div className="sticky top-0 h-screen">
+        <motion.div
+          style={{ opacity }}
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden
+        >
+          {/* Pillars: repeating columns with transparent gaps to reveal stars */}
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `
+                repeating-linear-gradient(
+                  to right,
+                  rgba(229,231,235,0.92) 0px,
+                  rgba(229,231,235,0.92) 140px,
+                  rgba(17,24,39,0) 140px,
+                  rgba(17,24,39,0) 280px
+                )
+              `,
+            }}
+          />
+          {/* Inner edge shading for depth */}
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `
+                repeating-linear-gradient(
+                  to right,
+                  rgba(0,0,0,0.12) 0px,
+                  rgba(0,0,0,0.12) 6px,
+                  rgba(0,0,0,0) 6px,
+                  rgba(0,0,0,0) 140px,
+                  rgba(0,0,0,0.12) 140px,
+                  rgba(0,0,0,0.12) 146px,
+                  rgba(0,0,0,0) 146px,
+                  rgba(0,0,0,0) 280px
+                )
+              `,
+            }}
+          />
+          {/* Entablature hint at the top */}
+          <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-white/20 to-white/0" />
+          {/* Floor haze */}
+          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white/10 to-transparent" />
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================================
+   Main scene: marble Mermaid gallery + roof + interior + long tail
    ========================================================================== */
 
 function MainScene() {
@@ -217,6 +330,7 @@ function MainScene() {
     </h2>
   );
 
+  // 10 diagrams
   const diagrams: { title: string; blurb: string; code: string }[] = [
     {
       title: "Unified AI & On-Chain Trading Platform",
@@ -354,7 +468,6 @@ flowchart TD
       {/* MARBLE MERMAID GALLERY */}
       <section className="relative z-0 pb-32">
         <Stars />
-
         <div className="space-y-56 md:space-y-64 px-6">
           {diagrams.map(({ title, blurb, code }, idx) => (
             <div key={idx} className="max-w-7xl mx-auto">
@@ -376,15 +489,21 @@ flowchart TD
         </div>
       </section>
 
+      {/* Spacer to get ~4 scrolls after last Mermaid block before the roof */}
+      <section className="min-h-[120vh]" />
+
+      {/* Roof reveal then interior */}
+      <RoofReveal />
+      <TempleInterior />
+
       {/* LONG STAR FIELD TAIL (extend scrolling; no dark band) */}
       <section className="relative min-h-[350vh]">
         <Stars />
-        {/* optional ultra-soft vignette, no visible band */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(1200px 300px at 50% 120%, rgba(0,0,0,0.18), rgba(0,0,0,0))"
+              "radial-gradient(1200px 300px at 50% 120%, rgba(0,0,0,0.18), rgba(0,0,0,0))",
           }}
         />
       </section>
