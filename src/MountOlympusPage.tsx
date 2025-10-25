@@ -1,10 +1,5 @@
-import React, { useState, useRef } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import MermaidBlock from "./components/MermaidBlock";
 
 /* ============================================================================
@@ -27,7 +22,7 @@ function MermaidAuto({ code }: { code: string }) {
 }
 
 /* ============================================================================
-   Background layers
+   Background Layers
    ========================================================================== */
 function Stars() {
   return (
@@ -57,135 +52,40 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
   return (
     <main className="relative min-h-screen overflow-hidden text-white bg-black">
       <Stars />
-      <div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center"
-        aria-label="Olympus tower"
-      >
-        <motion.div
-          className="bg-gray-500 rounded-full border-4 border-gray-200 shadow-2xl"
-          style={{ width: 220, height: 50, marginBottom: 10 }}
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8">
+        <motion.h1
+          className="text-4xl md:text-5xl font-semibold mb-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        >
+          The Odyssey Awaits
+        </motion.h1>
+        <motion.p
+          className="text-lg text-white/80 max-w-xl mb-10"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.9 }}
-        />
-
-        <div className="flex space-x-3">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div
-              key={i}
-              className="bg-gray-300 shadow-md"
-              style={{ width: 12, height: 100 }}
-            />
-          ))}
-        </div>
-
-        <motion.div
-          className="bg-gray-700 border-x-4 border-gray-500 shadow-lg"
-          style={{ width: "160px", height: "400px" }}
-          initial={{ y: 220, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
-        />
-
-        <motion.div
-          className="bg-gray-600 border-t-4 border-gray-400 rounded-t-lg shadow-xl"
-          style={{ width: "200px", height: "220px" }}
-          initial={{ y: 220, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        />
+          transition={{ delay: 0.3, duration: 1.2 }}
+        >
+          Ascend to the marble halls of the Odysseus Collective — a union of AI
+          agents, Solana automation, and BNB logic.
+        </motion.p>
+        <motion.button
+          onClick={onEnter}
+          className="px-8 py-3 rounded-xl bg-white/10 border border-white/30 hover:bg-white/20 backdrop-blur text-white font-semibold transition"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 1 }}
+        >
+          Enter Mount Olympus
+        </motion.button>
       </div>
-
-      <motion.svg
-        className="absolute bottom-0 left-1/2 -translate-x-1/2"
-        style={{ width: 220, height: 780 }}
-        viewBox="0 0 220 780"
-        initial={{ opacity: 0.2 }}
-        whileHover={{ opacity: 0.5 }}
-        transition={{ duration: 0.5 }}
-        onClick={onEnter}
-      >
-        <rect x="0" y="0" width="220" height="780" fill="transparent" />
-      </motion.svg>
     </main>
   );
 }
 
 /* ============================================================================
-   Roof + Interior
-   ========================================================================== */
-function RoofReveal() {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], ["20%", "-10%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.15, 1], [0, 1, 0.95]);
-
-  return (
-    <section ref={ref} className="relative z-10 min-h-[160vh]">
-      <Stars />
-      <div className="sticky top-0 h-screen flex items-end justify-center overflow-hidden">
-        <motion.div style={{ y, opacity }} className="w-full max-w-5xl px-6">
-          <svg viewBox="0 0 1200 380" className="w-full h-auto">
-            <defs>
-              <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#e5e7eb" />
-                <stop offset="100%" stopColor="#c7cbd1" />
-              </linearGradient>
-            </defs>
-            <polygon points="0,300 600,40 1200,300" fill="url(#stone)" />
-            <rect x="60" y="300" width="1080" height="26" fill="#e5e7eb" />
-            <rect x="60" y="326" width="1080" height="18" fill="rgba(0,0,0,0.12)" />
-          </svg>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-function TempleInterior() {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
-  const opacity = useTransform(scrollYProgress, [0, 0.06], [0, 1]);
-
-  return (
-    <section ref={ref} className="relative z-10 min-h-[220vh]">
-      <Stars />
-      <div className="sticky top-0 h-screen">
-        <motion.div
-          style={{ opacity }}
-          className="absolute inset-0 pointer-events-none"
-          aria-hidden
-        >
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `
-                repeating-linear-gradient(
-                  to right,
-                  rgba(229,231,235,0.92) 0px,
-                  rgba(229,231,235,0.92) 140px,
-                  rgba(17,24,39,0) 140px,
-                  rgba(17,24,39,0) 280px
-                )
-              `,
-            }}
-          />
-          <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-white/20 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white/10 to-transparent" />
-        </motion.div>
-      </div>
-    </section>
-  );
-}
-
-/* ============================================================================
-   Main Scene
+   Main Scene (Marble Mermaid Gallery)
    ========================================================================== */
 function MainScene() {
   const H = ({ children }: { children: React.ReactNode }) => (
@@ -195,24 +95,68 @@ function MainScene() {
   );
 
   const diagrams: { title: string; blurb: string; code: string }[] = [
-    { title: "Example", blurb: "Sample flowchart.", code: `flowchart TD; A-->B;` },
+    {
+      title: "Unified AI & On-Chain Trading Platform",
+      blurb:
+        "Modular system combining conversational agents with rule-based trading. Built for transparency, safety, and local control. Deployable with Docker.",
+      code: `
+flowchart TD
+  O[Odysseus Platform] --> A[Agents: Chat API & UI]
+  O --> S[Solana Bot: Pump.fun + RugCheck + Jupiter]
+  O --> B[BNB Module: HTTP swap service]
+  O --> D[Unified Docker Workflow]`,
+    },
+    {
+      title: "Odysseus Agents",
+      blurb:
+        "A lightweight chat layer exposing an OpenAI-compatible API for reasoning, orchestration, and custom commands.",
+      code: `
+flowchart TD
+  A[Agents] --> API[OpenAI-compatible API]
+  A --> Backends[Pluggable backends (OpenAI / local / hosted)]
+  A --> Calls[Calls internal trade services]
+  A --> UI[Optional UI]`,
+    },
+    {
+      title: "Solana Bot",
+      blurb:
+        "Automated trading for Pump.fun tokens with RugCheck gating and Jupiter routing.",
+      code: `
+flowchart TD
+  S[Solana Bot] --> Watch[Watch Pump.fun tokens]
+  Watch --> Risk[RugCheck risk gate]
+  Risk -->|pass| Route[Jupiter routing]
+  Route --> Exec[Execute trade]`,
+    },
+    {
+      title: "BNB Module",
+      blurb: "HTTP microservice that executes live swaps on BNB Chain.",
+      code: `
+flowchart TD
+  B[BNB Module] --> HTTP[HTTP endpoint]
+  HTTP --> Swap[Live swap on BNB Chain]
+  Swap --> Confirm[Confirm and return]`,
+    },
   ];
-  const regal = { duration: 1.05, ease: [0.16, 1, 0.3, 1] as const };
+
+  const regal = { duration: 1.15, ease: [0.16, 1, 0.3, 1] as const };
 
   return (
     <main className="relative min-h-screen overflow-x-hidden text-white bg-gradient-to-b from-[#0b1020] via-[#090f1c] to-[#05070d]">
       <Stars />
       <section className="relative z-10 flex items-center justify-center h-screen px-6 text-center">
         <motion.div
+          className="max-w-3xl"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
+          transition={regal}
         >
           <h1 className="text-3xl sm:text-4xl font-semibold mb-6">
             Odysseus Collective
           </h1>
-          <p className="text-white/90">
-            Welcome to the Odysseus Collective. What hatred drives you to climb?
+          <p className="text-white/90 leading-relaxed">
+            Welcome to the Odysseus Collective. What hatred drives you to climb
+            the mountain here?
           </p>
         </motion.div>
       </section>
@@ -232,25 +176,11 @@ function MainScene() {
                 <H>{title}</H>
                 <p className="text-white/80">{blurb}</p>
               </motion.div>
+
               <MermaidAuto code={code} />
             </div>
           ))}
         </div>
-      </section>
-
-      <section className="min-h-[120vh]" />
-      <RoofReveal />
-      <TempleInterior />
-
-      <section className="relative z-0 min-h-[350vh]">
-        <Stars />
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(1200px 300px at 50% 120%, rgba(0,0,0,0.18), rgba(0,0,0,0))",
-          }}
-        />
       </section>
     </main>
   );
