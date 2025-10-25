@@ -2,23 +2,20 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import MermaidBlock from "./components/MermaidBlock";
 
-/* -------------------------------------------------------------------------- */
-/* Helpers                                                                    */
-/* -------------------------------------------------------------------------- */
+/* ============================================================================
+   Helpers
+   ========================================================================== */
 
-/** Render a Mermaid block only after it enters the viewport (prevents DOM timing issues). */
+/** Reveal container + trigger Mermaid render once it comes into view. */
 function MermaidAuto({ code }: { code: string }) {
   const [active, setActive] = React.useState(false);
-
-  // “regal” fade: slower, with a luxurious easing curve (easeOutQuint-like)
-  const regal = { duration: 1.1, ease: [0.16, 1, 0.3, 1] as const };
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 56 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.4 }}
-      transition={regal}
+      viewport={{ once: true, amount: 0.35, margin: "-15% 0px -15% 0px" }}
+      transition={{ duration: 1.15, ease: [0.16, 1, 0.3, 1] }}
+      style={{ willChange: "opacity, transform" }}
       onViewportEnter={() => setActive(true)}
     >
       <MermaidBlock code={code} active={active} />
@@ -26,9 +23,9 @@ function MermaidAuto({ code }: { code: string }) {
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/* Background layers                                                          */
-/* -------------------------------------------------------------------------- */
+/* ============================================================================
+   Background layers
+   ========================================================================== */
 
 function Stars() {
   return (
@@ -90,7 +87,7 @@ function Clouds() {
           animate={{ x: [0, 25, 0], opacity: [0.5, 0.8, 0.5] }}
           transition={{
             repeat: Infinity,
-            duration: 18 + Math.random() * 12, // slightly slower drift
+            duration: 18 + Math.random() * 12,
             ease: "easeInOut",
           }}
         />
@@ -99,9 +96,9 @@ function Clouds() {
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/* Intro scene                                                                */
-/* -------------------------------------------------------------------------- */
+/* ============================================================================
+   Intro scene
+   ========================================================================== */
 
 function OlympusIntro({ onEnter }: { onEnter: () => void }) {
   return (
@@ -111,7 +108,7 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
       <Clouds />
 
       <div
-        className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center"
         aria-label="Olympus tower"
       >
         <motion.div
@@ -209,9 +206,9 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/* Main scene with marble Mermaid gallery + extended tail                     */
-/* -------------------------------------------------------------------------- */
+/* ============================================================================
+   Main scene: marble Mermaid gallery + long tail
+   ========================================================================== */
 
 function MainScene() {
   const H = ({ children }: { children: React.ReactNode }) => (
@@ -220,7 +217,6 @@ function MainScene() {
     </h2>
   );
 
-  // 10 diagrams, top → bottom
   const diagrams: { title: string; blurb: string; code: string }[] = [
     {
       title: "Unified AI & On-Chain Trading Platform",
@@ -332,7 +328,6 @@ flowchart TD
     }
   ];
 
-  // regal fade used for headings/paragraphs too
   const regal = { duration: 1.05, ease: [0.16, 1, 0.3, 1] as const };
 
   return (
@@ -359,17 +354,17 @@ flowchart TD
       {/* MARBLE MERMAID GALLERY */}
       <section className="relative z-0 pb-32">
         <Stars />
-        <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-transparent via-transparent to-black/20" />
 
-        <div className="space-y-36 px-6">
+        <div className="space-y-56 md:space-y-64 px-6">
           {diagrams.map(({ title, blurb, code }, idx) => (
-            <div key={idx} className="max-w-6xl mx-auto">
+            <div key={idx} className="max-w-7xl mx-auto">
               <motion.div
-                initial={{ opacity: 0, y: 26 }}
+                initial={{ opacity: 0, y: 32 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.5 }}
+                viewport={{ once: true, amount: 0.5, margin: "-15% 0px -15% 0px" }}
                 transition={regal}
-                className="mb-5"
+                className="mb-7"
+                style={{ willChange: "opacity, transform" }}
               >
                 <H>{title}</H>
                 <p className="text-white/80">{blurb}</p>
@@ -381,18 +376,25 @@ flowchart TD
         </div>
       </section>
 
-      {/* LONG STAR FIELD TAIL — extend scroll length (tune vh if you want more) */}
-      <section className="relative min-h-[300vh]">
+      {/* LONG STAR FIELD TAIL (extend scrolling; no dark band) */}
+      <section className="relative min-h-[350vh]">
         <Stars />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+        {/* optional ultra-soft vignette, no visible band */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(1200px 300px at 50% 120%, rgba(0,0,0,0.18), rgba(0,0,0,0))"
+          }}
+        />
       </section>
     </main>
   );
 }
 
-/* -------------------------------------------------------------------------- */
-/* Export page with intro→main transition                                     */
-/* -------------------------------------------------------------------------- */
+/* ============================================================================
+   Export page with intro → main transition
+   ========================================================================== */
 
 export default function MountOlympusPage() {
   const [entered, setEntered] = useState(false);
