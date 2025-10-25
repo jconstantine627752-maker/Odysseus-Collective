@@ -16,8 +16,8 @@ mermaid.initialize({
     secondaryColor: "#111827",
     tertiaryColor: "#111827",
     noteBkgColor: "#0f172a",
-    noteTextColor: "#E5E7EB"
-  }
+    noteTextColor: "#E5E7EB",
+  },
 });
 
 export default function MermaidBlock({ code, active = false }: Props) {
@@ -25,7 +25,6 @@ export default function MermaidBlock({ code, active = false }: Props) {
   const [ready, setReady] = useState(false);
   const renderId = useId();
 
-  // Avoid DOM timing issues (createElementNS) on some environments
   const domReady = () =>
     new Promise<void>((res) =>
       requestAnimationFrame(() => requestAnimationFrame(() => res()))
@@ -43,9 +42,7 @@ export default function MermaidBlock({ code, active = false }: Props) {
       if (cancelled || !containerRef.current) return;
 
       containerRef.current.innerHTML = svg;
-
-      // Animate the produced SVG
-      const svgEl = containerRef.current.querySelector("svg") as SVGSVGElement | null;
+      const svgEl = containerRef.current.querySelector("svg");
       if (svgEl) {
         svgEl.style.opacity = "0";
         svgEl.style.transform = "translateY(28px) scale(0.985)";
@@ -59,10 +56,11 @@ export default function MermaidBlock({ code, active = false }: Props) {
           });
         });
       }
-
       setReady(true);
     })().catch(() => {});
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [active, code, renderId]);
 
   return (
@@ -71,9 +69,8 @@ export default function MermaidBlock({ code, active = false }: Props) {
       aria-busy={!ready}
       className="w-full max-w-6xl md:max-w-7xl mx-auto rounded-2xl border border-white/15 bg-white/5 p-8 md:p-10 backdrop-blur shadow-[0_10px_50px_rgba(0,0,0,0.45)]"
       style={{
-        // faint marble-like veils
         backgroundImage:
-          "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))"
+          "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
       }}
     />
   );
