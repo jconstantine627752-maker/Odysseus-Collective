@@ -5,6 +5,7 @@ import MermaidBlock from "./components/MermaidBlock";
 /* ============================================================================
    Helpers
    ========================================================================== */
+
 function MermaidAuto({ code }: { code: string }) {
   const [active, setActive] = React.useState(false);
   return (
@@ -24,6 +25,7 @@ function MermaidAuto({ code }: { code: string }) {
 /* ============================================================================
    Background layers
    ========================================================================== */
+
 function Stars() {
   return (
     <div className="absolute inset-0 pointer-events-none" aria-hidden>
@@ -96,6 +98,7 @@ function Clouds() {
 /* ============================================================================
    Intro scene
    ========================================================================== */
+
 function OlympusIntro({ onEnter }: { onEnter: () => void }) {
   return (
     <main className="relative min-h-screen overflow-hidden text-white bg-black">
@@ -157,7 +160,14 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
             <rect x="0" y="0" width="220" height="780" fill="black" />
             <rect x="0" y="0" width="220" height="50" rx="25" fill="white" />
             <rect x="30" y="60" width="160" height="500" fill="white" />
-            <rect x="10" y="560" width="200" height="220" rx="100" fill="white" />
+            <rect
+              x="10"
+              y="560"
+              width="200"
+              height="220"
+              rx="100"
+              fill="white"
+            />
           </mask>
           <filter id="softGoldGlow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur in="SourceAlpha" stdDeviation="30" result="blur" />
@@ -181,7 +191,14 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
         />
 
         <g mask="url(#towerUnion)" filter="url(#softGoldGlow)">
-          <rect x="0" y="0" width="220" height="780" fill="#EEDC82" opacity="0.25" />
+          <rect
+            x="0"
+            y="0"
+            width="220"
+            height="780"
+            fill="#EEDC82"
+            opacity="0.25"
+          />
         </g>
       </motion.svg>
     </main>
@@ -189,11 +206,11 @@ function OlympusIntro({ onEnter }: { onEnter: () => void }) {
 }
 
 /* ============================================================================
-   GitHub iframe (bottom of second page)
+   GitHub iframe block (directly below Mermaid gallery)
    ========================================================================== */
 function GitHubEmbed() {
   return (
-    <section className="relative z-0 py-24 bg-gradient-to-b from-[#070b16] to-[#06080f]">
+    <section className="relative z-0 pt-4 pb-24 bg-gradient-to-b from-[#090f1c] to-[#070b16]">
       <Stars />
       <div className="max-w-6xl mx-auto px-6">
         <div className="mb-6">
@@ -219,8 +236,9 @@ function GitHubEmbed() {
 }
 
 /* ============================================================================
-   Main scene: marble Mermaid gallery + long tail + GitHub
+   Main scene: marble Mermaid gallery + GitHub iframe + darker tail
    ========================================================================== */
+
 function MainScene() {
   const H = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-xl md:text-2xl font-semibold tracking-wide mb-3 text-[#E5C970]">
@@ -363,7 +381,7 @@ flowchart TD
       </section>
 
       {/* MARBLE MERMAID GALLERY */}
-      <section className="relative z-0 pb-32">
+      <section className="relative z-0 pb-20">
         <Stars />
         <div className="space-y-56 md:space-y-64 px-6">
           {diagrams.map(({ title, blurb, code }, idx) => (
@@ -386,20 +404,20 @@ flowchart TD
         </div>
       </section>
 
-      {/* LONG STAR FIELD TAIL (extend scrolling; no dark band) */}
-      <section className="relative min-h-[350vh]">
+      {/* GITHUB IFRAME — directly below the gallery */}
+      <GitHubEmbed />
+
+      {/* LONG STAR FIELD TAIL (darker as you go) */}
+      <section className="relative min-h-[250vh] bg-gradient-to-b from-[#070b16] via-[#04070e] to-[#000205]">
         <Stars />
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(1200px 300px at 50% 120%, rgba(0,0,0,0.18), rgba(0,0,0,0))",
+              "radial-gradient(1200px 320px at 50% 120%, rgba(0,0,0,0.24), rgba(0,0,0,0))",
           }}
         />
       </section>
-
-      {/* FINAL: GitHub repository viewer */}
-      <GitHubEmbed />
     </main>
   );
 }
@@ -407,6 +425,7 @@ flowchart TD
 /* ============================================================================
    Export page with intro → main transition
    ========================================================================== */
+
 export default function MountOlympusPage() {
   const [entered, setEntered] = useState(false);
 
@@ -436,4 +455,3 @@ export default function MountOlympusPage() {
     </AnimatePresence>
   );
 }
-
