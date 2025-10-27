@@ -1,10 +1,5 @@
-import React, { useState, useRef } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import MermaidBlock from "./components/MermaidBlock";
 
 /* ============================================================================
@@ -26,6 +21,9 @@ function MermaidAuto({ code }: { code: string }) {
   );
 }
 
+/* ============================================================================
+   Background layers
+   ========================================================================== */
 function Stars() {
   return (
     <div className="absolute inset-0 pointer-events-none" aria-hidden>
@@ -47,110 +45,151 @@ function Stars() {
   );
 }
 
-/* ============================================================================
-   Roof reveal
-   ========================================================================== */
-function RoofReveal() {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], ["20%", "-10%"]);
-  const opacity = useTransform(scrollYProgress, [0, 0.15, 1], [0, 1, 0.95]);
-
+function Mountains() {
   return (
-    <section ref={ref} className="relative min-h-[160vh]">
-      <Stars />
-      <div className="sticky top-0 h-screen flex items-end justify-center overflow-hidden">
-        <motion.div style={{ y, opacity }} className="w-full max-w-5xl px-6">
-          <svg viewBox="0 0 1200 380" className="w-full h-auto" aria-label="Temple roof">
-            <defs>
-              <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#e5e7eb" />
-                <stop offset="100%" stopColor="#c7cbd1" />
-              </linearGradient>
-              <linearGradient id="ledge" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#e5e7eb" />
-                <stop offset="100%" stopColor="#d1d5db" />
-              </linearGradient>
-            </defs>
-            {/* Pediment + ledge */}
-            <polygon points="0,300 600,40 1200,300" fill="url(#stone)" />
-            <rect x="60" y="300" width="1080" height="26" fill="url(#ledge)" />
-            <rect x="60" y="326" width="1080" height="18" fill="rgba(0,0,0,0.12)" />
-          </svg>
-        </motion.div>
-      </div>
-    </section>
+    <div className="absolute bottom-0 w-full h-[45vh] bg-gradient-to-t from-gray-900 to-transparent overflow-hidden">
+      {Array.from({ length: 7 }).map((_, i) => (
+        <div
+          key={i}
+          className="absolute bg-gray-700 opacity-80"
+          style={{
+            bottom: 0,
+            left: `${i * 15 - 10}%`,
+            width: "50%",
+            height: `${30 + Math.random() * 40}vh`,
+            clipPath:
+              "polygon(0% 100%, 20% 40%, 50% 20%, 80% 50%, 100% 100%)",
+            filter: "blur(3px)",
+          }}
+        />
+      ))}
+    </div>
   );
 }
 
-/* ============================================================================
-   Temple interior pillars
-   ========================================================================== */
-function TempleInterior() {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
-  const opacity = useTransform(scrollYProgress, [0, 0.06], [0, 1]);
-
+function Clouds() {
   return (
-    <section ref={ref} className="relative min-h-[220vh]">
-      <Stars />
-      <div className="sticky top-0 h-screen">
+    <div className="absolute bottom-0 w-full h-[35vh] overflow-hidden">
+      <div className="absolute bottom-0 w-full h-[20vh] bg-white/30 blur-3xl" />
+      {Array.from({ length: 12 }).map((_, i) => (
         <motion.div
-          style={{ opacity }}
-          className="absolute inset-0 pointer-events-none"
-          aria-hidden
-        >
-          {/* Pillars with gaps to show stars behind */}
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `
-                repeating-linear-gradient(
-                  to right,
-                  rgba(229,231,235,0.92) 0px,
-                  rgba(229,231,235,0.92) 140px,
-                  rgba(17,24,39,0) 140px,
-                  rgba(17,24,39,0) 280px
-                )
-              `,
-            }}
-          />
-          {/* Inner shading for depth */}
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `
-                repeating-linear-gradient(
-                  to right,
-                  rgba(0,0,0,0.12) 0px,
-                  rgba(0,0,0,0.12) 6px,
-                  rgba(0,0,0,0) 6px,
-                  rgba(0,0,0,0) 140px,
-                  rgba(0,0,0,0.12) 140px,
-                  rgba(0,0,0,0.12) 146px,
-                  rgba(0,0,0,0) 146px,
-                  rgba(0,0,0,0) 280px
-                )
-              `,
-            }}
-          />
-          <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-white/20 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white/10 to-transparent" />
-        </motion.div>
-      </div>
-    </section>
+          key={i}
+          className="absolute bg-white/40 rounded-full blur-3xl"
+          style={{
+            left: `${Math.random() * 100}%`,
+            bottom: `${Math.random() * 8}%`,
+            width: `${120 + Math.random() * 220}px`,
+            height: `${60 + Math.random() * 100}px`,
+          }}
+          animate={{ x: [0, 25, 0], opacity: [0.5, 0.8, 0.5] }}
+          transition={{
+            repeat: Infinity,
+            duration: 18 + Math.random() * 12,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
   );
 }
 
 /* ============================================================================
-   GitHub iframe embed (bottom of second page)
-   NOTE: GitHub blocks iframes; github1s renders safely inside an iframe.
+   Intro scene
+   ========================================================================== */
+function OlympusIntro({ onEnter }: { onEnter: () => void }) {
+  return (
+    <main className="relative min-h-screen overflow-hidden text-white bg-black">
+      <Stars />
+      <Mountains />
+      <Clouds />
+
+      <div
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 flex flex-col items-center"
+        aria-label="Olympus tower"
+      >
+        <motion.div
+          className="bg-gray-500 rounded-full border-4 border-gray-200 shadow-2xl"
+          style={{ width: 220, height: 50, marginBottom: 10 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.9 }}
+        />
+
+        <div className="flex space-x-3">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div
+              key={i}
+              className="bg-gray-300 shadow-md"
+              style={{ width: 12, height: 100 }}
+            />
+          ))}
+        </div>
+
+        <motion.div
+          className="bg-gray-700 border-x-4 border-gray-500 shadow-lg"
+          style={{ width: "160px", height: "400px" }}
+          initial={{ y: 220, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1] }}
+        />
+
+        <motion.div
+          className="bg-gray-600 border-t-4 border-gray-400 rounded-t-lg shadow-xl"
+          style={{ width: "200px", height: "220px" }}
+          initial={{ y: 220, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+        />
+      </div>
+
+      {/* Clickable glow mask over the tower */}
+      <motion.svg
+        className="absolute bottom-0 left-1/2 -translate-x-1/2"
+        style={{ width: 220, height: 780 }}
+        viewBox="0 0 220 780"
+        initial={{ opacity: 0.2 }}
+        whileHover={{ opacity: 0.5 }}
+        transition={{ duration: 0.5 }}
+        onClick={onEnter}
+      >
+        <defs>
+          <mask id="towerUnion">
+            <rect x="0" y="0" width="220" height="780" fill="black" />
+            <rect x="0" y="0" width="220" height="50" rx="25" fill="white" />
+            <rect x="30" y="60" width="160" height="500" fill="white" />
+            <rect x="10" y="560" width="200" height="220" rx="100" fill="white" />
+          </mask>
+          <filter id="softGoldGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="30" result="blur" />
+            <feFlood floodColor="#EEDC82" floodOpacity="0.6" result="color" />
+            <feComposite in="color" in2="blur" operator="in" result="softGlow" />
+            <feMerge>
+              <feMergeNode in="softGlow" />
+              <feMergeNode in="blur" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        <rect
+          x="0"
+          y="0"
+          width="220"
+          height="780"
+          mask="url(#towerUnion)"
+          fill="transparent"
+          pointerEvents="all"
+        />
+
+        <g mask="url(#towerUnion)" filter="url(#softGoldGlow)">
+          <rect x="0" y="0" width="220" height="780" fill="#EEDC82" opacity="0.25" />
+        </g>
+      </motion.svg>
+    </main>
+  );
+}
+
+/* ============================================================================
+   GitHub iframe (bottom of second page)
    ========================================================================== */
 function GitHubEmbed() {
   return (
@@ -168,7 +207,6 @@ function GitHubEmbed() {
 
         <div className="rounded-2xl border border-white/15 bg-white/5 backdrop-blur shadow-[0_10px_50px_rgba(0,0,0,0.45)] overflow-hidden">
           <iframe
-            // Use github1s for an embeddable, read-only viewer
             src="https://github1s.com/jconstantine627752-maker/Odysseus"
             title="Odysseus GitHub Repo"
             className="w-full h-[85vh] bg-white"
@@ -181,7 +219,7 @@ function GitHubEmbed() {
 }
 
 /* ============================================================================
-   Main scene: gallery + roof + interior + long tail + GitHub
+   Main scene: marble Mermaid gallery + long tail + GitHub
    ========================================================================== */
 function MainScene() {
   const H = ({ children }: { children: React.ReactNode }) => (
@@ -324,7 +362,7 @@ flowchart TD
         </motion.div>
       </section>
 
-      {/* MERMAID GALLERY */}
+      {/* MARBLE MERMAID GALLERY */}
       <section className="relative z-0 pb-32">
         <Stars />
         <div className="space-y-56 md:space-y-64 px-6">
@@ -341,21 +379,15 @@ flowchart TD
                 <H>{title}</H>
                 <p className="text-white/80">{blurb}</p>
               </motion.div>
+
               <MermaidAuto code={code} />
             </div>
           ))}
         </div>
       </section>
 
-      {/* Spacer so you scroll a bit before the roof appears */}
-      <section className="min-h-[120vh]" />
-
-      {/* Roof → Interior */}
-      <RoofReveal />
-      <TempleInterior />
-
-      {/* Long star-field tail for extra depth before the repo */}
-      <section className="relative min-h-[200vh]">
+      {/* LONG STAR FIELD TAIL (extend scrolling; no dark band) */}
+      <section className="relative min-h-[350vh]">
         <Stars />
         <div
           className="pointer-events-none absolute inset-0"
@@ -366,53 +398,18 @@ flowchart TD
         />
       </section>
 
-      {/* Final: GitHub embed at the very bottom */}
+      {/* FINAL: GitHub repository viewer */}
       <GitHubEmbed />
     </main>
   );
 }
 
 /* ============================================================================
-   Export: Intro → Main
+   Export page with intro → main transition
    ========================================================================== */
-function OlympusIntro({ onEnter }: { onEnter: () => void }) {
-  return (
-    <main className="relative min-h-screen overflow-hidden text-white bg-black">
-      <Stars />
-      <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8">
-        <motion.h1
-          className="text-4xl md:text-5xl font-semibold mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        >
-          The Odyssey Awaits
-        </motion.h1>
-        <motion.p
-          className="text-lg text-white/80 max-w-xl mb-10"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 1.2 }}
-        >
-          Ascend to the marble halls of the Odysseus Collective — a union of AI
-          agents, Solana automation, and BNB logic.
-        </motion.p>
-        <motion.button
-          onClick={onEnter}
-          className="px-8 py-3 rounded-xl bg-white/10 border border-white/30 hover:bg-white/20 backdrop-blur text-white font-semibold transition"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 1 }}
-        >
-          Enter Mount Olympus
-        </motion.button>
-      </div>
-    </main>
-  );
-}
-
 export default function MountOlympusPage() {
   const [entered, setEntered] = useState(false);
+
   return (
     <AnimatePresence initial={false} mode="wait">
       {!entered ? (
@@ -439,3 +436,4 @@ export default function MountOlympusPage() {
     </AnimatePresence>
   );
 }
+
