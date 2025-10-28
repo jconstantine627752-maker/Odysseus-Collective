@@ -75,7 +75,7 @@ export default function StatueGroup() {
         <div className="flex justify-center items-end">
           <Statue
             name="Odin"
-            description="The 402 Bot - Guardian of Knowledge"
+            description="X402 - The Divine Keeper of Digital Knowledge"
             transform="translateY(-20px) scale(0.95)"
           />
           <Statue
