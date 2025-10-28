@@ -1,5 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
+
+// Import images directly
+import odinStatue from '../assets/odin-statue.png';
+import odysseusStatue from '../assets/odysseus-statue.png';
+import zeusStatue from '../assets/zeus-statue.png';
 
 interface StatueProps {
   name: string;
@@ -72,6 +77,15 @@ function Statue({ name, description, transform = 'none', imageSrc }: StatueProps
 }
 
 export default function StatueGroup() {
+  useEffect(() => {
+    // Debug logging for image loading
+    console.log('Loading images:', {
+      odin: odinStatue,
+      odysseus: odysseusStatue,
+      zeus: zeusStatue
+    });
+  }, []);
+
   return (
     <section className="relative z-0 pt-24 pb-32 bg-gradient-to-b from-[#070b16] to-[#04070e]">
       <div className="max-w-6xl mx-auto">
@@ -91,18 +105,18 @@ export default function StatueGroup() {
             name="Odin"
             description="X402 - The Divine Keeper of Digital Knowledge"
             transform="translateY(-20px) scale(0.95)"
-            imageSrc="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjQ0OCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEyMCA4MGMtMTYgMC0zMCAxNC0zMCAzMHYyMjhjMCAxNiAxNCAzMCAzMCAzMHMzMC0xNCAzMC0zMFYxMTBjMC0xNi0xNC0zMC0zMC0zMHoiIGZpbGw9IiNmZmYiLz48L3N2Zz4="
+            imageSrc={odinStatue}
           />
           <Statue
             name="Odysseus"
             description="The Conversational Agent - Your Guide Through Wisdom"
-            imageSrc="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjQ0OCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEyMCA4MGMtMTYgMC0zMCAxNC0zMCAzMHYyMjhjMCAxNiAxNCAzMCAzMCAzMHMzMC0xNCAzMC0zMFYxMTBjMC0xNi0xNC0zMC0zMC0zMHoiIGZpbGw9IiNmZmYiLz48L3N2Zz4="
+            imageSrc={odysseusStatue}
           />
           <Statue
             name="Zeus"
             description="The Trading Oracle - Master of Markets"
             transform="translateY(-20px) scale(0.95)"
-            imageSrc="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjQ0OCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEyMCA4MGMtMTYgMC0zMCAxNC0zMCAzMHYyMjhjMCAxNiAxNCAzMCAzMCAzMHMzMC0xNCAzMC0zMFYxMTBjMC0xNi0xNC0zMC0zMC0zMHoiIGZpbGw9IiNmZmYiLz48L3N2Zz4="
+            imageSrc={zeusStatue}
           />
         </div>
       </div>
