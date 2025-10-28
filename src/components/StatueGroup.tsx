@@ -29,15 +29,17 @@ function Statue({ name, description, transform = 'none', imageSrc }: StatueProps
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10" />
 
           {/* Statue image */}
-          <img
-            src={imageSrc}
-            alt={name}
-            className="w-full h-full object-cover object-center"
-            style={{
-              filter: 'brightness(1.1) contrast(1.2) invert(1)',
-              mixBlendMode: 'multiply'
-            }}
-          />
+          <div className="relative w-full h-full">
+            <img
+              src={imageSrc}
+              alt={name}
+              className="absolute inset-0 w-full h-full object-contain"
+              style={{
+                filter: 'brightness(2) contrast(1.2)',
+                mixBlendMode: 'screen'
+              }}
+            />
+          </div>
 
           {/* Dramatic lighting effects */}
           <div className="absolute inset-0 bg-[#E5C970]/10 blur-3xl rounded-full animate-pulse" />
@@ -79,18 +81,18 @@ export default function StatueGroup() {
             name="Odin"
             description="X402 - The Divine Keeper of Digital Knowledge"
             transform="translateY(-20px) scale(0.95)"
-            imageSrc="/images/odin-statue.png"
+            imageSrc="./images/odin-statue.png"
           />
           <Statue
             name="Odysseus"
             description="The Conversational Agent - Your Guide Through Wisdom"
-            imageSrc="/images/odysseus-statue.png"
+            imageSrc="./images/odysseus-statue.png"
           />
           <Statue
             name="Zeus"
             description="The Trading Oracle - Master of Markets"
             transform="translateY(-20px) scale(0.95)"
-            imageSrc="/images/zeus-statue.png"
+            imageSrc="./images/zeus-statue.png"
           />
         </div>
       </div>
