@@ -32,9 +32,10 @@ function Statue({ name, description, transform = 'none', imageSrc }: StatueProps
           <img
             src={imageSrc}
             alt={name}
-            className="w-full h-full object-contain object-center bg-transparent"
+            className="w-full h-full object-cover object-center"
             style={{
-              filter: 'brightness(0.95) contrast(1.05)'
+              filter: 'brightness(1.1) contrast(1.2) invert(1)',
+              mixBlendMode: 'multiply'
             }}
           />
 
