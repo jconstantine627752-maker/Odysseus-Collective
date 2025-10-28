@@ -409,13 +409,19 @@ flowchart TD
       <GitHubEmbed />
 
       {/* Odysseus Statue (click to open chat) */}
-      <section className="relative z-0 py-24 bg-gradient-to-b from-[#070b16] to-[#04070e]">
+      <section className="relative z-10 py-32 bg-gradient-to-b from-black via-[#070b16] to-[#04070e]">
         <Stars />
-        <div className="max-w-6xl mx-auto px-6 flex flex-col items-center">
-          <h2 className="text-2xl font-semibold tracking-wide text-[#E5C970] mb-12">
+        <div className="absolute inset-0 bg-[#E5C970]/5 mix-blend-overlay" />
+        <div className="absolute inset-0 bg-gradient-radial-to-t from-transparent to-black/50" />
+        <div className="max-w-6xl mx-auto px-6 flex flex-col items-center relative">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-64 bg-gradient-to-b from-[#E5C970]/20 to-transparent blur-sm" />
+          <h2 className="text-3xl font-semibold tracking-wide text-[#E5C970] mb-16 drop-shadow-2xl">
             The Ancient One Awaits
           </h2>
-          <OdysseusStatue />
+          <div className="relative">
+            <div className="absolute -inset-32 bg-[#E5C970]/5 blur-3xl rounded-full animate-pulse opacity-50" />
+            <OdysseusStatue />
+          </div>
         </div>
       </section>
 
