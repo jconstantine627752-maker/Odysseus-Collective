@@ -29,16 +29,26 @@ function Statue({ name, description, transform = 'none', imageSrc }: StatueProps
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10" />
 
           {/* Statue image */}
-          <div className="relative w-full h-full">
-            <img
-              src={imageSrc}
-              alt={name}
-              className="absolute inset-0 w-full h-full object-contain"
-              style={{
-                filter: 'brightness(2) contrast(1.2)',
-                mixBlendMode: 'screen'
-              }}
-            />
+          <div className="relative w-full h-full flex items-center justify-center">
+            <picture>
+              <source srcSet={imageSrc.replace('.png', '.webp')} type="image/webp" />
+              <source srcSet={imageSrc} type="image/png" />
+              <img
+                src={imageSrc}
+                alt={name}
+                className="h-full w-auto max-w-full object-contain"
+                style={{
+                  filter: 'brightness(2) contrast(1.2)',
+                  mixBlendMode: 'screen'
+                }}
+                onError={(e) => {
+                  const img = e.currentTarget;
+                  img.onerror = null; // Prevent infinite loop
+                  img.style.opacity = '0.7';
+                  img.style.background = 'linear-gradient(to bottom, rgba(229, 201, 112, 0.2), transparent)';
+                }}
+              />
+            </picture>
           </div>
 
           {/* Dramatic lighting effects */}
@@ -81,18 +91,18 @@ export default function StatueGroup() {
             name="Odin"
             description="X402 - The Divine Keeper of Digital Knowledge"
             transform="translateY(-20px) scale(0.95)"
-            imageSrc="./images/odin-statue.png"
+            imageSrc="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjQ0OCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEyMCA4MGMtMTYgMC0zMCAxNC0zMCAzMHYyMjhjMCAxNiAxNCAzMCAzMCAzMHMzMC0xNCAzMC0zMFYxMTBjMC0xNi0xNC0zMC0zMC0zMHoiIGZpbGw9IiNmZmYiLz48L3N2Zz4="
           />
           <Statue
             name="Odysseus"
             description="The Conversational Agent - Your Guide Through Wisdom"
-            imageSrc="./images/odysseus-statue.png"
+            imageSrc="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjQ0OCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEyMCA4MGMtMTYgMC0zMCAxNC0zMCAzMHYyMjhjMCAxNiAxNCAzMCAzMCAzMHMzMC0xNCAzMC0zMFYxMTBjMC0xNi0xNC0zMC0zMC0zMHoiIGZpbGw9IiNmZmYiLz48L3N2Zz4="
           />
           <Statue
             name="Zeus"
             description="The Trading Oracle - Master of Markets"
             transform="translateY(-20px) scale(0.95)"
-            imageSrc="./images/zeus-statue.png"
+            imageSrc="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjQ0OCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEyMCA4MGMtMTYgMC0zMCAxNC0zMCAzMHYyMjhjMCAxNiAxNCAzMCAzMCAzMHMzMC0xNCAzMC0zMFYxMTBjMC0xNi0xNC0zMC0zMC0zMHoiIGZpbGw9IiNmZmYiLz48L3N2Zz4="
           />
         </div>
       </div>
