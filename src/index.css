@@ -4,6 +4,8 @@
 
 html, body, #root {
   height: 100%;
+  background-color: #0b1020;
+  color: white;
 }
 
 /* Optional: slicker text rendering */
