@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import MermaidBlock from "./components/MermaidBlock";
+import OdysseusStatue from "./components/OdysseusStatue";
 
 /* ============================================================================
    Helpers
@@ -406,6 +407,17 @@ flowchart TD
 
       {/* GITHUB IFRAME — directly below the gallery */}
       <GitHubEmbed />
+
+      {/* Odysseus Statue */}
+      <section className="relative z-0 py-24 bg-gradient-to-b from-[#070b16] to-[#04070e]">
+        <Stars />
+        <div className="max-w-6xl mx-auto px-6 flex flex-col items-center">
+          <h2 className="text-2xl font-semibold tracking-wide text-[#E5C970] mb-12">
+            The Ancient One Awaits
+          </h2>
+          <OdysseusStatue />
+        </div>
+      </section>
 
       {/* LONG STAR FIELD TAIL (darker as you go) */}
       <section className="relative min-h-[250vh] bg-gradient-to-b from-[#070b16] via-[#04070e] to-[#000205]">
