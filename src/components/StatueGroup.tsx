@@ -32,33 +32,18 @@ function Statue({ name, description, transform = 'none', imageSrc }: StatueProps
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10" />
 
           <div className="relative w-full h-full flex items-center justify-center">
-            {(() => {
-              const key = imageSrc.toLowerCase();
-              const isOdysseus = key.includes('odysseus');
-              const isOdin = key.includes('odin');
-              // Zeus default (dramatic screen + boost) — keep as-is
-              if (isOdysseus) {
-                // Odysseus has a white background; use multiply so whites become the dark background
-                return (
-                  <img
-                    src={imageSrc}
-                    alt={name}
-                    className="h-full w-auto max-w-full object-contain"
-                    style={{ mixBlendMode: 'multiply' }}
-                  />
-                );
-              }
-
-              // Odin and Zeus use the stylized screen blend and boost
-              return (
-                <img
-                  src={imageSrc}
-                  alt={name}
-                  className="h-full w-auto max-w-full object-contain brightness-200 contrast-125"
-                  style={{ mixBlendMode: 'screen' }}
-                />
-              );
-            })()}
+            <img
+              src={imageSrc}
+              alt={name}
+              className={`h-full w-auto max-w-full object-contain ${
+                name === "Zeus" || name === "Odin"
+                  ? "brightness-200 contrast-125"
+                  : ""
+              }`}
+              style={{
+                mixBlendMode: name === "Zeus" || name === "Odin" ? "screen" : "multiply"
+              }}
+            />
           </div>
 
           <div className="absolute inset-0 bg-[#E5C970]/10 blur-3xl rounded-full animate-pulse" />
