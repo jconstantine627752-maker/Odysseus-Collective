@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import MermaidBlock from "./components/MermaidBlock";
-import OdysseusStatue from "./components/OdysseusStatue";
+import StatueGroup from "./components/StatueGroup";
 
 /* ============================================================================
    Helpers
@@ -408,33 +408,24 @@ flowchart TD
       {/* GITHUB IFRAME — directly below the gallery */}
       <GitHubEmbed />
 
-      {/* Odysseus Statue (click to open chat) */}
-      <section className="relative z-10 py-32 bg-gradient-to-b from-black via-[#070b16] to-[#04070e]">
+      {/* LONG STAR FIELD TAIL WITH STATUES AT THE END */}
+      <section className="relative bg-gradient-to-b from-[#070b16] via-[#04070e] to-[#000205]">
         <Stars />
-        <div className="absolute inset-0 bg-[#E5C970]/5 mix-blend-overlay" />
-        <div className="absolute inset-0 bg-gradient-radial-to-t from-transparent to-black/50" />
-        <div className="max-w-6xl mx-auto px-6 flex flex-col items-center relative">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-64 bg-gradient-to-b from-[#E5C970]/20 to-transparent blur-sm" />
-          <h2 className="text-3xl font-semibold tracking-wide text-[#E5C970] mb-16 drop-shadow-2xl">
-            The Ancient One Awaits
-          </h2>
-          <div className="relative">
-            <div className="absolute -inset-32 bg-[#E5C970]/5 blur-3xl rounded-full animate-pulse opacity-50" />
-            <OdysseusStatue />
-          </div>
-        </div>
-      </section>
-
-      
-
-      {/* LONG STAR FIELD TAIL (darker as you go) */}
-      <section className="relative min-h-[250vh] bg-gradient-to-b from-[#070b16] via-[#04070e] to-[#000205]">
-        <Stars />
+        
+        {/* Add space before the statues */}
+        <div className="h-[50vh]" />
+        
+        {/* STATUE GROUP */}
+        <StatueGroup />
+        
+        {/* Continue with star field after statues */}
+        <div className="h-[150vh]" />
+        
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(1200px 320px at 50% 120%, rgba(0,0,0,0.24), rgba(0,0,0,0))",
+              "radial-gradient(1200px 320px at 50% 120%, rgba(0,0,0,0.24), rgba(0,0,0,0))"
           }}
         />
       </section>
