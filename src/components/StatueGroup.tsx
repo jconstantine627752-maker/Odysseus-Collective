@@ -35,13 +35,16 @@ function Statue({ name, description, transform = 'none', imageSrc }: StatueProps
             <img
               src={imageSrc}
               alt={name}
-              className={`h-full w-auto max-w-full object-contain ${
-                name === "Zeus" || name === "Odin"
-                  ? "brightness-200 contrast-125"
-                  : ""
+              className={`h-full w-auto max-w-full object-contain${
+                name === "Zeus" ? " brightness-200 contrast-125" : ""
               }`}
               style={{
-                mixBlendMode: name === "Zeus" || name === "Odin" ? "screen" : "multiply"
+                mixBlendMode:
+                  name === "Zeus"
+                    ? "screen"
+                    : name === "Odysseus"
+                    ? "multiply"
+                    : undefined
               }}
             />
           </div>
