@@ -12,9 +12,10 @@ interface StatueProps {
   description: string;
   transform?: string;
   imageSrc: string;
+  onClick?: () => void;
 }
 
-function Statue({ name, description, transform = 'none', imageSrc }: StatueProps) {
+function Statue({ name, description, transform = 'none', imageSrc, onClick }: StatueProps) {
   return (
     <motion.div
       className="relative mx-4"
@@ -27,6 +28,7 @@ function Statue({ name, description, transform = 'none', imageSrc }: StatueProps
         className="w-60 h-[28rem] relative cursor-pointer group"
         whileHover={{ scale: 1.02, rotateY: 5 }}
         transition={{ duration: 0.5 }}
+        onClick={onClick}
       >
         <div className="w-full h-full rounded-lg shadow-2xl overflow-hidden border border-[#E5C970]/20 relative">
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent z-10" />
@@ -68,6 +70,10 @@ function Statue({ name, description, transform = 'none', imageSrc }: StatueProps
 }
 
 export default function StatueGroup() {
+  const handleZeusClick = () => {
+    window.open('https://github.com/jconstantine627752-maker/Odysseus/tree/main/apps/zeus', '_blank');
+  };
+
   return (
     <section className="relative z-0 pt-24 pb-32 bg-gradient-to-b from-[#070b16] to-[#04070e]">
       <div className="max-w-6xl mx-auto">
@@ -97,6 +103,7 @@ export default function StatueGroup() {
             description="The Trading Oracle - Master of Markets"
             transform="translateY(-20px) scale(0.95)"
             imageSrc={IMAGES.zeus}
+            onClick={handleZeusClick}
           />
         </div>
       </div>
