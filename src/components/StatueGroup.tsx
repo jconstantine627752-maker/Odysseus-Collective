@@ -70,6 +70,10 @@ function Statue({ name, description, transform = 'none', imageSrc, onClick }: St
 }
 
 export default function StatueGroup() {
+  const handleOdinClick = () => {
+    window.open('https://github.com/jconstantine627752-maker/Odysseus/tree/main/apps/odin', '_blank');
+  };
+
   const handleZeusClick = () => {
     window.open('https://github.com/jconstantine627752-maker/Odysseus/tree/main/apps/zeus', '_blank');
   };
@@ -92,6 +96,7 @@ export default function StatueGroup() {
             description="X402 - The Divine Keeper of Digital Knowledge"
             transform="translateY(-20px) scale(0.95)"
             imageSrc={IMAGES.odin}
+            onClick={handleOdinClick}
           />
           <Statue
             name="Odysseus"
